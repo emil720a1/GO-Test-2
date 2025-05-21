@@ -3,39 +3,37 @@ package person
 import "fmt"
 
 type Person struct {
-	Name string
-	Age  int
+	Name    string
+	Age     int
+	Address string
 }
 
-func New(name string, age int) *Person {
+func New(name string, age int, address string) *Person {
 	return &Person{
-		Name: name,
-		Age:  age,
+		Name:    name,
+		Age:     age,
+		Address: address,
 	}
 }
 
-func Init(name string, age int) Person {
+func Init(name string, age int, address string) Person {
 	return Person{
-		Name: name,
-		Age:  age,
+		Name:    name,
+		Age:     age,
+		Address: address,
 	}
 }
 
-func ChageAge(p Person, age int) {
+func (p Person) SetAgeValue(age int) {
 	p.Age = age
+	fmt.Println(p.GetAge())
 }
 
-func ChageAgePtr(p *Person, age int) {
+func (p *Person) SetAgeValuePtr(age int) {
 	p.Age = age
-}
-
-// Метод
-func (p *Person) GetName() string {
-	fmt.Println(p.Name)
-	return p.Name
-}
-
-func (p Person) GetAge() {
 	fmt.Println(p.Age)
+}
 
+func (p Person) GetAge() int {
+	return p.Age
 }
