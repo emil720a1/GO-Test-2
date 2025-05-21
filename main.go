@@ -1,13 +1,18 @@
 package main
 
 import (
-	"fmt"
-	"hiper/person/models"
+	person "hiper/person/models"
 )
 
 func main() {
 
-	p := person.SetPerson(18, "Oleg", "Osvita 4")
-	fmt.Println(p.Name)
-	fmt.Println(p.GetAge())
+	s := person.Init("Oleg", 18)
+
+	person.ChageAge(s, 43)
+	s.GetAge()
+
+	i := person.New("John", 41)
+
+	person.ChageAgePtr(i, 43)
+	i.GetAge()
 }
