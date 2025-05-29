@@ -2,25 +2,24 @@ package main
 
 import (
 	"fmt"
-	person "hiper/person/models"
+	"sync"
+	"time"
 )
 
 func main() {
-	//copy -> Person
-	//s := person.Init("Oleg", 30, "New York")
-	//s.SetAgeValue(10)
-	//fmt.Println(s.Age)
-	//// pointer -> *0xAddr -> Person
-	//i := person.New("John", 30, "New York")
-	//i.SetAgeValuePtr(10)
-	//fmt.Println(i.Age)
+	files := []string{"file1", "file2", "file3"}
+	fmt.Println(files)
+	var wg sync.WaitGroup
+	wg.Add(len(files))
+	for _, file := range files {
+		go func(file string) {
+			defer wg.Done()
+			fmt.Println("Починаємо завантаження...", file)
+			time.Sleep(1 * time.Second)
+			fmt.Println("Завершенно...", file)
+		}(file)
 
-	s := person.InitUser("John", 30)
-	s.SetID()
-	s.Print()
-	fmt.Println(s.Id)
+	}
+	wg.Wait()
 
-	i := person.NewUser("John", 30)
-	i.SetID()
-	i.Print()
 }

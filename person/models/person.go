@@ -1,31 +1,33 @@
-package person
+package main
 
 import "fmt"
 
-type User struct {
-	Name string
-	Id   int
-}
-
-func NewUser(name string, id int) *User {
-	return &User{
-		Name: name,
-		Id:   id,
+func main() {
+	slice := []uint8{1, 2, 3, 4}
+	for i := range uint8(255) {
+		slice = append(slice, i)
 	}
-}
 
-func InitUser(name string, id int) User {
-	return User{
-		Name: name,
-		Id:   id,
+	lol := slice[:len(slice):len(slice)]
+
+	for i := range slice {
+		slice[i] *= 2
 	}
-}
 
-func (u *User) SetID() {
-	u.Id = 1000
+	lol[10] = 155
 
-}
+	fmt.Println("lol[10]", lol[10])
+	fmt.Println("slice[10]", slice[10])
 
-func (u User) Print() {
-	fmt.Println(u.Name, u.Id)
+	fmt.Println(cap(lol))
+	fmt.Println(cap(slice))
+
+	lol = append(lol, 255)
+	lol[10] = 255
+
+	fmt.Println("lol[10]", lol[10])
+	fmt.Println("slice[10]", slice[10])
+
+	fmt.Println("Cap lol", cap(lol))
+	fmt.Println("Cap slice", cap(slice))
 }
