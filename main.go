@@ -7,34 +7,50 @@ import (
 )
 
 func main() {
-	sentences := []string{
-		"Go is fast.",
-		"Goroutines are light.",
-		"Channels sync them.",
+
+	orders := map[string]int{
+		"Burger": 2,
+		"Pizza":  4,
+		"Sushi":  3,
 	}
 
-	ch := make(chan rune)
+	//n := make([]int, 0, len(orders))
+	//for k := range n {
+	//	n = append(n, k)
+	//}
+	ordersReady := make(chan string)
 	var wg sync.WaitGroup
-
-	for _, sentence := range sentences {
-		wg.Add(1)
-		go func(s string) {
-			defer wg.Done()
-			for _, char := range s {
-				time.Sleep(1 * time.Second)
-				ch <- char
-			}
-		}(sentence)
-	}
-
-	// Закриваємо канал, коли всі горутини завершились
+	wg.Add(3)
 	go func() {
-		wg.Wait()
-		close(ch)
+
+		defer wg.Done()
+		time.Sleep(time.Duration(orders["Burger"]) * time.Second)
+		ordersReady <- "Burger"
+
 	}()
 
-	// Виводимо символи по одному
-	for char := range ch {
-		fmt.Printf("%c\n", char)
+	go func() {
+
+		defer wg.Done()
+		time.Sleep(time.Duration(orders["Pizza"]) * time.Second)
+		ordersReady <- "Pizza"
+	}()
+
+	go func() {
+		defer wg.Done()
+
+		time.Sleep(time.Duration(orders["Sushi"]) * time.Second)
+		ordersReady <- "Sushi"
+
+	}()
+
+	go func() {
+		wg.Wait()
+		close(ordersReady)
+	}()
+
+	for i := range ordersReady {
+		fmt.Println(i)
 	}
+
 }
