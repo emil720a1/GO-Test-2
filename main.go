@@ -3,64 +3,38 @@ package main
 import (
 	"fmt"
 	"sync"
+	"time"
 )
 
 func main() {
+	sentences := []string{
+		"Go is fast.",
+		"Goroutines are light.",
+		"Channels sync them.",
+	}
 
-	ch := make(chan string, 3)
+	ch := make(chan rune)
 	var wg sync.WaitGroup
-	wg.Add(3)
-	go func() {
-		defer wg.Done()
-		ch <- "McOleg"
-	}()
 
-	go func() {
-		defer wg.Done()
-		ch <- "Zina"
-	}()
+	for _, sentence := range sentences {
+		wg.Add(1)
+		go func(s string) {
+			defer wg.Done()
+			for _, char := range s {
+				time.Sleep(1 * time.Second)
+				ch <- char
+			}
+		}(sentence)
+	}
 
-	go func() {
-		defer wg.Done()
-		ch <- "love"
-	}()
+	// Закриваємо канал, коли всі горутини завершились
 	go func() {
 		wg.Wait()
 		close(ch)
 	}()
 
-	for name := range ch {
-		fmt.Println(name)
+	// Виводимо символи по одному
+	for char := range ch {
+		fmt.Printf("%c\n", char)
 	}
-
-	//ch1 := make(chan string, 3)
-	//
-	//var wg sync.WaitGroup
-	//wg.Add(1)
-	//go func() {
-	//	defer wg.Done()
-	//
-	//	ch1 <- "oleg"
-	//	//fmt.Println(fmt.Sprintf("Привіт %s", i))
-	//}()
-	//wg.Add(1)
-	//go func() {
-	//	defer wg.Done()
-	//
-	//	ch1 <- "zina"
-	//
-	//}()
-	//
-	//wg.Add(1)
-	//go func() {
-	//	defer wg.Done()
-	//
-	//	ch1 <- "Koncha"
-	//}()
-	//fmt.Println(fmt.Sprintf("Hello %s", <-ch1))
-	//fmt.Println(fmt.Sprintf("Hello %s", <-ch1))
-	//fmt.Println(fmt.Sprintf("Hello %s", <-ch1))
-	//
-	//wg.Wait()
-
 }
